@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Temps Solutions</title>
+    <link href="static/bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/bootstrap-5.3.8-dist/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="static/custom/css/app.css" rel="stylesheet">
+    <script src="static/custom/js/app.js"></script>
+    <script src="static/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="bg-body-secondary">
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top">
+    <div class="container-fluid px-3 px-lg-4">
+
+        <!-- ЛОГО -->
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2 me-auto me-lg-0" href="/">
+            <span class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-3"
+                  style="width:32px;height:32px;">
+                <i class="bi bi-kanban"></i>
+            </span>
+            <span>Temps Solutions</span>
+        </a>
+
+        <div class="d-flex flex-column justify-content-center" id="navMain">
+            <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center
+                        gap-2 ms-auto mt-3 mt-lg-0">
+
+                <div class="collapse navbar-collapse d-none d-lg-flex">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="disabled nav-link" href="#">Документация</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="d-flex flex-row justify-content-end align-items-center gap-2" id="userBlock">
+                    <button type="button"
+                            class="btn btn-outline-secondary border-0"
+                            id="themeToggle" aria-label="Переключить тему">
+                        <i class="bi bi-moon-stars" id="themeIcon"></i>
+                    </button>
+                    <button class="navbar-toggler" type="button"
+                            data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+                            aria-controls="mobileMenu" aria-label="Меню">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Offcanvas меню для мобильных -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="mobileMenuLabel">Меню</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="#">Документация</a></li>
+            <li class="nav-item"><a class="nav-link" href="#how">Как это работает</a></li>
+            <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+        </ul>
+        <hr>
+    </div>
+</div>
+
+<main class="flex-grow-1 overflow-hidden" style="min-height: 70vh;">
+    <div class="container-fluid p-3 p-lg-4 d-flex flex-column gap-3" style="max-width:1100px;">
+
+        <!-- Поиск и фильтр -->
+        <div class="d-flex gap-1 flex-column px-4 py-4 card border-0 shadow-sm rounded-4" style="min-height: 100px;">
+            <div class="d-flex" role="search">
+                <input id="search-input" class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                <button class="btn btn-outline-success" type="button">Search</button>
+            </div>
+            <div class="d-flex flex-wrap">
+                <div class="dropdown">
+                    <button id="btn-stack" class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Все
+                    </button>
+                    <ul id="btns-stack" class="dropdown-menu">
+                        <li><button data-stack-type="all" class="dropdown-item" type="button">Все</button></li>
+                        <li><button data-stack-type="mobile" class="dropdown-item" type="button">Мобилки</button></li>
+                        <li><button data-stack-type="server" class="dropdown-item" type="button">Сервер</button></li>
+                        <li><button data-stack-type="desctop" class="dropdown-item" type="button">Десктоп</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Список -->
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center">
+                <h2 class="h6 fw-bold mb-0">
+                    <i class="bi bi-link-45deg me-2 text-primary"></i>Ссылки
+                </h2>
+            </div>
+
+            <!-- сюда рисуются карточки или скелетон загрузки -->
+            <div id="projects-list" class="list-group list-group-flush" aria-live="polite"></div>
+
+            <!-- сюда выводятся состояния: пусто / ничего не найдено / ошибка -->
+            <div id="list-state" class="text-center text-body-secondary py-5 px-3 d-none"></div>
+        </div>
+    </div>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-top py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <a class="navbar-brand d-flex align-items-center gap-2 fw-bold mb-3" href="#">
+                    <span class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-3"
+                          style="width:32px;height:32px;">
+                        <i class="bi bi-kanban"></i>
+                    </span>
+                    Temps Solutions
+                </a>
+                <div class="d-flex gap-2">
+                    <a href="https://github.com/ExtaSsS4106/Documetations_List" class="btn btn-sm btn-outline-secondary" aria-label="GitHub">
+                        <i class="bi bi-github"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+            <p class="text-body-secondary small mb-0">&copy; 2026 Temps Solutions</p>
+            <p class="text-body-secondary small mb-0">
+                Сделано на <i class="bi bi-bootstrap-fill text-primary"></i> Bootstrap 5.3
+            </p>
+        </div>
+    </div>
+</footer>
+
+<!-- Кнопка наверх -->
+<button type="button"
+        class="btn btn-primary rounded-circle shadow position-fixed bottom-0 end-0 m-4 d-none"
+        id="backToTop"
+        style="width:48px;height:48px;z-index:1050;"
+        data-bs-toggle="tooltip" data-bs-placement="left" title="Наверх"
+        aria-label="Наверх">
+    <i class="bi bi-arrow-up"></i>
+</button>
+
+<script>
+    const api = "https://script.google.com/macros/s/AKfycbyvhW45WcxvLR0BDVmH4Un9GKpFHjSsjVFQVAVLTwDbwCcJl37fgmSCiiK89FfPxw8G/exec";
+    let data = [];
+
+    // --- Кнопка "наверх" ---
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        backToTop.classList.toggle('d-none', window.scrollY < 400);
+    });
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // --- Закрываем offcanvas при клике по ссылке ---
+    const offcanvasEl = document.getElementById('mobileMenu');
+    offcanvasEl.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', () => {
+            bootstrap.Offcanvas.getInstance(offcanvasEl)?.hide();
+        });
+    });
+
+    // ================= ЭЛЕМЕНТЫ =================
+    const list        = document.getElementById('projects-list');
+    const listState   = document.getElementById('list-state');
+    const btnStack    = document.getElementById('btn-stack');
+    const btnsStack   = document.getElementById('btns-stack');
+    const searchInput = document.getElementById('search-input');
+
+    const filterState = { stack: 'all', query: '' };
+
+    // ================= СОСТОЯНИЯ СПИСКА =================
+
+    // Скелетон: анимированные заглушки прямо в списке
+    function showLoading(count = 4) {
+        hideState();
+        const rows = Array.from({ length: count }, () => {
+            const row = document.createElement('div');
+            row.className = 'list-group-item bg-transparent d-flex align-items-center gap-3 placeholder-glow';
+            row.innerHTML = `
+                <span class="placeholder rounded" style="width:32px;height:32px;"></span>
+                <div class="flex-grow-1">
+                    <span class="placeholder col-5 d-block mb-2"></span>
+                    <span class="placeholder col-3 d-block placeholder-sm"></span>
+                </div>
+                <span class="placeholder rounded" style="width:28px;height:22px;"></span>`;
+            return row;
+        });
+        list.setAttribute('aria-busy', 'true');
+        list.replaceChildren(...rows);
+    }
+
+    function hideState() {
+        listState.classList.add('d-none');
+        listState.replaceChildren();
+    }
+
+    // Универсальный вывод сообщения (пусто / не найдено / ошибка)
+    function showState({ icon, title, text, buttonLabel, onClick, danger = false }) {
+        const i = document.createElement('i');
+        i.className = `bi ${icon} fs-1 d-block mb-2 ${danger ? 'text-danger' : ''}`;
+
+        const h = document.createElement('div');
+        h.className = 'fw-semibold text-body';
+        h.textContent = title;
+
+        const p = document.createElement('div');
+        p.className = 'small mb-3';
+        p.textContent = text || '';
+
+        listState.replaceChildren(i, h, p);
+
+        if (buttonLabel) {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'btn btn-sm btn-outline-secondary';
+            b.textContent = buttonLabel;
+            b.addEventListener('click', onClick);
+            listState.append(b);
+        }
+        listState.classList.remove('d-none');
+    }
+
+    // ================= ФИЛЬТР + ПОИСК =================
+    function applyFilters() {
+        const cards = list.querySelectorAll('.list-group-item[data-card]');
+        if (!cards.length) return;
+
+        let visible = 0;
+        cards.forEach(card => {
+            let stackMatch = true;
+            if (filterState.stack !== 'all') {
+                stackMatch = [...card.querySelectorAll('[data-type]')]
+                    .some(badge => badge.dataset.type === filterState.stack);
+            }
+
+            let queryMatch = true;
+            if (filterState.query) {
+                queryMatch = card.textContent.toLowerCase().includes(filterState.query);
+            }
+
+            const show = stackMatch && queryMatch;
+            card.classList.toggle('d-none', !show);
+            if (show) visible++;
+        });
+
+        if (visible === 0) {
+            showState({
+                icon: 'bi-search',
+                title: 'Ничего не найдено',
+                text: 'Попробуйте изменить запрос или фильтр.',
+                buttonLabel: 'Сбросить фильтры',
+                onClick: resetFilters
+            });
+        } else {
+            hideState();
+        }
+    }
+
+    function resetFilters() {
+        filterState.stack = 'all';
+        filterState.query = '';
+        searchInput.value = '';
+        btnStack.textContent = 'Все';
+        applyFilters();
+    }
+
+    // ================= КАРТОЧКИ =================
+    const TYPE_META = {
+        server:  { icon: 'bi-server', color: 'text-bg-primary' },
+        mobile:  { icon: 'bi-phone',  color: 'text-bg-success' },
+        desctop: { icon: 'bi-tv',     color: 'text-bg-warning' },
+    };
+
+    // Приводит значение к массиву: поддерживает и массив, и строку "a, b"
+    function toArray(value) {
+        if (Array.isArray(value)) return value.map(v => String(v).trim()).filter(Boolean);
+        if (value == null || value === '') return [];
+        return String(value)
+            .replace(/^\s*\[|\]\s*$/g, '')
+            .split(',')
+            .map(s => s.trim().replace(/^["']|["']$/g, ''))
+            .filter(Boolean);
+    }
+
+    function createCard(item) {
+        const card = document.createElement('div');
+        card.dataset.card = '';
+        card.className = 'list-group-item bg-transparent d-flex align-items-center gap-3';
+
+        const url = String(item.links || '');
+        const icon = document.createElement('i');
+        icon.className = `bi ${url.includes('github.com') ? 'bi-github' : 'bi-link-45deg'} fs-4 text-body`;
+
+        const body = document.createElement('div');
+        body.className = 'flex-grow-1';
+
+        const a = document.createElement('a');
+        a.className = 'link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover';
+        a.textContent = item.title || url || 'Без названия';
+        if (/^https?:\/\//i.test(url)) {          // защита от javascript: ссылок
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+        }
+
+        const meta = [];
+        const authors = toArray(item.authors);
+        if (authors.length) meta.push(authors.join(', '));
+        const d = new Date(item.date);
+        if (item.date && !isNaN(d)) meta.push(d.toLocaleDateString('ru-RU'));
+        if (item.stars) meta.push('★ ' + item.stars);
+
+        const sub = document.createElement('div');
+        sub.className = 'text-body-secondary small';
+        sub.textContent = meta.join(' · ');
+
+        body.append(a, sub);
+
+        const badges = document.createElement('div');
+        badges.className = 'd-flex flex-wrap gap-2';
+        toArray(item.types)
+            .forEach(type => {
+                const m = TYPE_META[type];
+                if (!m) return;
+                const badge = document.createElement('span');
+                badge.dataset.type = type;
+                badge.className = `badge ${m.color}`;
+                badge.innerHTML = `<i class="bi ${m.icon}"></i>`;
+                badges.append(badge);
+            });
+
+        card.append(icon, body, badges);
+        return card;
+    }
+
+    // ================= ЗАГРУЗКА =================
+    async function renderData() {
+        showLoading();
+
+        try {
+            const res = await fetch(api);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const json = await res.json();
+            if (!Array.isArray(json)) throw new Error('Неверный формат данных');
+            data = json;
+        } catch (error) {
+            console.error('Не удалось загрузить данные', error);
+            list.setAttribute('aria-busy', 'false');
+            list.replaceChildren();
+            showState({
+                icon: 'bi-exclamation-triangle',
+                title: 'Не удалось загрузить данные',
+                text: 'Проверьте соединение и попробуйте ещё раз.',
+                buttonLabel: 'Повторить',
+                onClick: renderData,
+                danger: true
+            });
+            return;
+        }
+
+        list.setAttribute('aria-busy', 'false');
+
+        if (data.length === 0) {
+            list.replaceChildren();
+            showState({
+                icon: 'bi-inbox',
+                title: 'Пока пусто',
+                text: 'В таблице ещё нет ни одной записи.'
+            });
+            return;
+        }
+
+        hideState();
+        list.replaceChildren(...data.map(createCard));
+        applyFilters();   // применяем текущий поиск и фильтр к новым карточкам
+    }
+
+    // ================= СОБЫТИЯ =================
+    btnsStack.querySelectorAll('button[type="button"]').forEach(stack => {
+        stack.addEventListener('click', () => {
+            btnStack.textContent = stack.innerText;
+            filterState.stack = stack.dataset.stackType;
+            applyFilters();
+        });
+    });
+
+    searchInput.addEventListener('input', () => {
+        filterState.query = searchInput.value.trim().toLowerCase();
+        applyFilters();
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') e.preventDefault();
+    });
+
+    renderData();
+</script>
+</body>
+</html>
