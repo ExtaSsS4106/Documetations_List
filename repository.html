@@ -144,13 +144,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // --- Закрываем offcanvas при клике по ссылке ---
-    const offcanvasEl = document.getElementById('mobileMenu');
-    offcanvasEl.querySelectorAll('a[href^="#"]').forEach(link => {
-        link.addEventListener('click', () => {
-            bootstrap.Offcanvas.getInstance(offcanvasEl)?.hide();
-        });
-    });
+    
 
     // ================= ЭЛЕМЕНТЫ =================
     const list        = document.getElementById('projects-list');
